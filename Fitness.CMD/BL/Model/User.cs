@@ -6,7 +6,6 @@ namespace Fitness.BL.Model
     /// <summary>
     /// Пользователь.
     /// </summary>
-    //[Serializable]
     public class User
     {
         #region Свойства
@@ -17,11 +16,11 @@ namespace Fitness.BL.Model
         /// <summary>
         /// Пол.
         /// </summary>
-        public Gender Gender { get; }
+        public Gender Gender { get; set; }
         /// <summary>
         /// Дата рождения.
         /// </summary>
-        public DateTime BirthDate { get; }
+        public DateTime BirthDate { get; set; }
         /// <summary>
         /// Вес.
         /// </summary>
@@ -30,7 +29,9 @@ namespace Fitness.BL.Model
         /// Рост.
         /// </summary>
         public double Height { get; set; }
-#endregion
+
+        public int Age { get { return DateTime.Now.Year - BirthDate.Year; } }
+        #endregion
 
         /// <summary>
         /// Создать нового пользователя.
@@ -42,6 +43,8 @@ namespace Fitness.BL.Model
         /// <param name="height"> Рост. </param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
+        
+        [JsonConstructor]
         public User(string name,
                     Gender gender,
                     DateTime birthDate,
@@ -76,9 +79,17 @@ namespace Fitness.BL.Model
             Weight = weight;
             Height = height;
         }
+        public User (string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException("Имя пользователя не может быть пустым или null", nameof(name));
+            }
+            Name = name;
+        }
         public override string ToString()
         {
-            return Name;
+            return Name + " " + Age;
         }
     }
 }
